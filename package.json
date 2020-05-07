@@ -1,0 +1,17 @@
+{
+  "name": "lang",
+  "version": "1.0.0",
+  "description": "An interpreter for a made up programming language written in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
+    "prettier": "prettier --config ./.prettierrc --write src/**/*.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.5"
+  }
+}
