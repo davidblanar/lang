@@ -1,49 +1,83 @@
 class Tokenizer {
   constructor(readStream) {
-    this.readStream = readStream;
-    // this.symbols = new Set(["(", ")", "=", "+", "-", "*", "/", "%"]);
-    // this.keywords = new Set(["var", "fn"]);
-    this.identifierChars = /[_A-Za-z]/;
-    // this.numberChars = /[0-9]/;
-    this.whiteSpaceRe = /\s/;
-    this.tokens = [];
+    this._readStream = readStream;
+    this._symbols = new Set(["(", ")", "=", "+", "-", "*", "/", "%"]);
+    this._identifierCharsRe = /[_A-Za-z]/;
+    this._numberCharsRe = /[0-9]/;
+    this._whiteSpaceRe = /\s/;
+    this._tokens = [];
   }
 
   getTokens() {
-    while (this.readStream.hasNext()) {
-      const current = this.readStream.peek();
+    return this._tokens;
+  }
+
+  generateTokens() {
+    while (this._readStream.hasNext()) {
+      const current = this._readStream.peek();
       if (current === "#") {
         this._skipComment();
       }
-      if (this.identifierChars.test(current)) {
-        this._readWhileIdentifier();
+      if (this._isWhiteSpace(current)) {
+        this._skip();
       }
-      this._readToken();
+      if (this._identifierCharsRe.test(current)) {
+        this._readIdentifier();
+      }
+      if (this._symbols.has(current)) {
+        this._readSymbol();
+      }
+      if (this._numberCharsRe.test(current)) {
+        this._readNumber();
+      }
     }
-    console.log(this.tokens);
+    return this;
   }
 
   _skipComment() {
-    while (this.readStream.hasNext() && this.readStream.next() !== "\n") {}
+    while (this._readStream.hasNext() && this._readStream.next() !== "\n") {}
   }
 
-  _readWhileIdentifier() {
+  _readIdentifier() {
     let identifier = "";
-    while (this.readStream.hasNext()) {
-      const current = this.readStream.next();
-      if (this.whiteSpaceRe.test(current)) {
+    while (this._readStream.hasNext()) {
+      const current = this._readStream.peek();
+      if (this._isWhiteSpace(current) || !this._isIdentifier(current)) {
         break;
       }
-      identifier += current;
+      identifier += this._readStream.next();
     }
-    this.tokens.push(identifier);
+    this._tokens.push(identifier);
   }
 
-  _readToken() {
-    const current = this.readStream.next();
-    if (this.readStream.hasNext() && !this.whiteSpaceRe.test(current)) {
-      this.tokens.push(current);
+  _readSymbol() {
+    const current = this._readStream.next();
+    this._tokens.push(current);
+  }
+
+  _readNumber() {
+    let number = "";
+    while (this._readStream.hasNext()) {
+      const current = this._readStream.peek();
+      if (current === "." || this._numberCharsRe.test(current)) {
+        number += this._readStream.next();
+      } else {
+        break;
+      }
     }
+    this._tokens.push(number);
+  }
+
+  _isWhiteSpace(char) {
+    return this._whiteSpaceRe.test(char);
+  }
+
+  _isIdentifier(char) {
+    return this._identifierCharsRe.test(char);
+  }
+
+  _skip() {
+    this._readStream.next();
   }
 }
 
