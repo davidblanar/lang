@@ -56,4 +56,28 @@ describe("Tokenizer", () => {
 			")"
 		]);
 	});
+
+	it("should correctly tokenize 3", () => {
+		const input = `
+      # comment line
+      (fn my_func a b (* a b)) # inline comment
+      # (var a 1)
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			"(",
+			"fn",
+			"my_func",
+			"a",
+			"b",
+			"(",
+			"*",
+			"a",
+			"b",
+			")",
+			")"
+		]);
+	});
 });
