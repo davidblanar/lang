@@ -1,6 +1,9 @@
+const { TYPES } = require("./const");
+
 class Tokenizer {
   constructor(readStream) {
     this._readStream = readStream;
+    // TODO implement >=
     this._symbols = new Set(["(", ")", "=", "+", "-", "*", "/", "%"]);
     this._identifierCharsRe = /[_A-Za-z]/;
     this._numberCharsRe = /[0-9]/;
@@ -50,12 +53,12 @@ class Tokenizer {
       }
       identifier += this._readStream.next();
     }
-    this._tokens.push(identifier);
+    this._tokens.push({ type: TYPES.identifier, val: identifier });
   }
 
   _readSymbol() {
     const current = this._readStream.next();
-    this._tokens.push(current);
+    this._tokens.push({ type: TYPES.symbol, val: current });
   }
 
   _readNumber() {
@@ -68,7 +71,7 @@ class Tokenizer {
         break;
       }
     }
-    this._tokens.push(number);
+    this._tokens.push({ type: TYPES.number, val: number });
   }
 
   _readString() {
@@ -85,7 +88,7 @@ class Tokenizer {
         string += this._readStream.next();
       }
     }
-    this._tokens.push(`"${string}"`);
+    this._tokens.push({ type: TYPES.string, val: string });
   }
 
   _isWhiteSpace(char) {

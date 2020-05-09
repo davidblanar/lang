@@ -1,19 +1,19 @@
 class ReadStream {
   constructor(input) {
-    this.input = input;
-    this.pos = 0;
+    this._input = input;
+    this._pos = 0;
   }
 
   next() {
-    return this.input[this.pos++];
+    return this._input[this._pos++];
   }
 
   hasNext() {
-    return this.input[this.pos] !== undefined;
+    return this._input[this._pos] !== undefined;
   }
 
   peek() {
-    return this.input[this.pos];
+    return this._input[this._pos];
   }
 }
 

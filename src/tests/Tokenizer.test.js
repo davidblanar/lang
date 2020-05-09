@@ -1,5 +1,6 @@
 const ReadStream = require("../ReadStream");
 const Tokenizer = require("../Tokenizer");
+const { TYPES } = require("../const");
 
 describe("Tokenizer", () => {
 	it("should correctly tokenize 1", () => {
@@ -11,16 +12,16 @@ describe("Tokenizer", () => {
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			"(",
-			"var",
-			"a",
-			"1",
-			")",
-			"(",
-			"var",
-			"b",
-			'"str"',
-			")"
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "var" },
+			{ type: TYPES.identifier, val: "a" },
+			{ type: TYPES.number, val: "1" },
+			{ type: TYPES.symbol, val: ")" },
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "var" },
+			{ type: TYPES.identifier, val: "b" },
+			{ type: TYPES.string, val: "str" },
+			{ type: TYPES.symbol, val: ")" }
 		]);
 	});
 
@@ -36,24 +37,24 @@ describe("Tokenizer", () => {
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			"(",
-			"var",
-			"a",
-			"12",
-			")",
-			"(",
-			"var",
-			"b",
-			"2.5",
-			")",
-			"(",
-			"print",
-			"(",
-			"+",
-			"a",
-			"b",
-			")",
-			")"
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "var" },
+			{ type: TYPES.identifier, val: "a" },
+			{ type: TYPES.number, val: "12" },
+			{ type: TYPES.symbol, val: ")" },
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "var" },
+			{ type: TYPES.identifier, val: "b" },
+			{ type: TYPES.number, val: "2.5" },
+			{ type: TYPES.symbol, val: ")" },
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "print" },
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.symbol, val: "+" },
+			{ type: TYPES.identifier, val: "a" },
+			{ type: TYPES.identifier, val: "b" },
+			{ type: TYPES.symbol, val: ")" },
+			{ type: TYPES.symbol, val: ")" }
 		]);
 	});
 
@@ -67,17 +68,17 @@ describe("Tokenizer", () => {
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			"(",
-			"fn",
-			"my_func",
-			"a",
-			"b",
-			"(",
-			"*",
-			"a",
-			"b",
-			")",
-			")"
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.identifier, val: "fn" },
+			{ type: TYPES.identifier, val: "my_func" },
+			{ type: TYPES.identifier, val: "a" },
+			{ type: TYPES.identifier, val: "b" },
+			{ type: TYPES.symbol, val: "(" },
+			{ type: TYPES.symbol, val: "*" },
+			{ type: TYPES.identifier, val: "a" },
+			{ type: TYPES.identifier, val: "b" },
+			{ type: TYPES.symbol, val: ")" },
+			{ type: TYPES.symbol, val: ")" }
 		]);
 	});
 });
