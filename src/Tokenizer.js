@@ -30,6 +30,9 @@ class Tokenizer {
       if (this._numberCharsRe.test(current)) {
         this._readNumber();
       }
+      if (current === "\"") {
+        this._readString();
+      }
     }
     return this;
   }
@@ -66,6 +69,23 @@ class Tokenizer {
       }
     }
     this._tokens.push(number);
+  }
+
+  _readString() {
+    // skip beginning double quote
+    this._readStream.next()
+    let string = "";
+    while (this._readStream.hasNext()) {
+      const current = this._readStream.peek();
+      if (current === "\"") {
+        // skip ending double quote
+        this._readStream.next()
+        break;
+      } else {
+        string += this._readStream.next();
+      }
+    }
+    this._tokens.push(`"${string}"`);
   }
 
   _isWhiteSpace(char) {

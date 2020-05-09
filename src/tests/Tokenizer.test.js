@@ -5,11 +5,23 @@ describe("Tokenizer", () => {
 	it("should correctly tokenize 1", () => {
 		const input = `
       (var a 1)
+      (var b "str")
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual(["(", "var", "a", "1", ")"]);
+		expect(tokens).toEqual([
+			"(",
+			"var",
+			"a",
+			"1",
+			")",
+			"(",
+			"var",
+			"b",
+			'"str"',
+			")"
+		]);
 	});
 
 	it("should correctly tokenize 2", () => {
