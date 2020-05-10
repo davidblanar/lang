@@ -55,8 +55,8 @@ class Tokenizer {
 		let identifier = "";
 		while (this._readStream.hasNext()) {
 			const current = this._readStream.peek();
-			// read until whitespace is encountered or no longer an identifier
-			if (this._isWhiteSpace(current) || !this._isIdentifier(current)) {
+			// read until whitespace is encountered or end of expression
+			if (this._isWhiteSpace(current) || current === ")") {
 				break;
 			}
 			identifier += this._readStream.next();
@@ -106,10 +106,6 @@ class Tokenizer {
 
 	_isWhiteSpace(char) {
 		return this._whiteSpaceRe.test(char);
-	}
-
-	_isIdentifier(char) {
-		return this._identifierCharsRe.test(char);
 	}
 
 	_skip() {

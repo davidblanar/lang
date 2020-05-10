@@ -12,7 +12,8 @@ const AST_TYPES = {
 	varReference: "varReference",
 	operation: "operation",
 	fnDeclaration: "fnDeclaration",
-	fnCall: "fnCall"
+	fnCall: "fnCall",
+	root: "root"
 };
 
 module.exports = {

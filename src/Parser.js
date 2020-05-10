@@ -15,7 +15,7 @@ class Parser {
 	}
 
 	getAst() {
-		return this._ast;
+		return { type: AST_TYPES.root, val: this._ast };
 	}
 
 	_parseExpression() {
@@ -85,6 +85,9 @@ class Parser {
 	}
 
 	_parseVarValue() {
+		if (this._peek().val === "(") {
+			return this._parseExpression();
+		}
 		const { val, type } = this._next();
 		switch (type) {
 			case TOKEN_TYPES.number: {
@@ -154,6 +157,7 @@ class Parser {
 			if (isFnName) {
 				isFnName = false;
 				fnName = this._parseVarReference();
+				continue;
 			}
 			if (this._peek().val === "(") {
 				// if the argument provided is an expression, parse it

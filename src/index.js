@@ -12,5 +12,8 @@ const tokenizer = new Tokenizer(readStream);
 const tokens = tokenizer.generateTokens().getTokens();
 const parser = new Parser(tokens);
 const ast = parser.parse().getAst();
-console.log(ast);
 const env = new Env();
+// setup global env
+env.add("print", console.log);
+
+evalUnderEnv(ast, env);
