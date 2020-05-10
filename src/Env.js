@@ -54,8 +54,6 @@ function evalOperation(expr, env) {
 
 // TODO test
 function evalUnderEnv(expr, env) {
-	// console.log(expr)
-	// console.log(env)
 	switch (expr.type) {
 		case AST_TYPES.root: {
 			let result;
@@ -86,12 +84,6 @@ function evalUnderEnv(expr, env) {
 			return fn.apply(null, args);
 		}
 		case AST_TYPES.fnDeclaration: {
-			///*{
-			//   type: 'fnDeclaration',
-			//   name: 'my_func1',
-			//   args: [ 'a' ],
-			//   body: { type: 'varReference', val: 'a' }
-			// }*/
 			const fn = function () {
 				const nestedEnv = env.extend();
 				if (expr.args.length !== arguments.length) {

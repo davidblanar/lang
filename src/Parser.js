@@ -22,7 +22,7 @@ class Parser {
 		this._requireVal("(");
 		this._next();
 		let expr;
-		while (this._peek().val !== ")") {
+		while (!this._isEndOfExpression()) {
 			const { type, val } = this._peek();
 			switch (type) {
 				case TOKEN_TYPES.number: {
@@ -44,6 +44,10 @@ class Parser {
 					}
 					if (val === "call") {
 						expr = this._parseFnCall();
+						break;
+					}
+					if (val === "true" || val === "false") {
+						expr = this._parseBoolean();
 						break;
 					}
 					expr = this._parseVarReference();
@@ -72,6 +76,10 @@ class Parser {
 		return { type: AST_TYPES.string, val: this._next().val };
 	}
 
+	_parseBoolean() {
+		return { type: AST_TYPES.boolean, val: this._next().val === "true" };
+	}
+
 	_parseVarDeclaration() {
 		// skip "var" keyword
 		this._next();
@@ -85,7 +93,7 @@ class Parser {
 	}
 
 	_parseVarValue() {
-		if (this._peek().val === "(") {
+		if (this._isBeginningOfExpression()) {
 			return this._parseExpression();
 		}
 		const { val, type } = this._next();
@@ -97,6 +105,9 @@ class Parser {
 				return { type: AST_TYPES.string, val };
 			}
 			case TOKEN_TYPES.identifier: {
+				if (this._isBoolean(val)) {
+					return { type: AST_TYPES.boolean, val: val === "true" };
+				}
 				return { type: AST_TYPES.varReference, val };
 			}
 		}
@@ -127,14 +138,14 @@ class Parser {
 		let fnName;
 		let body;
 		const args = [];
-		while (this._peek().val !== ")") {
+		while (!this._isEndOfExpression()) {
 			// first token is function name
 			if (isFnName) {
 				isFnName = false;
 				fnName = this._next().val;
 			}
 			// then parse function parameters and body
-			if (this._peek().val === "(") {
+			if (this._isBeginningOfExpression()) {
 				// the body of a function is an expression
 				body = this._parseExpression();
 			} else {
@@ -152,14 +163,14 @@ class Parser {
 		let isFnName = true;
 		let fnName;
 		const args = [];
-		while (this._peek().val !== ")") {
+		while (!this._isEndOfExpression()) {
 			// first token is function name, which is a var reference
 			if (isFnName) {
 				isFnName = false;
 				fnName = this._parseVarReference();
 				continue;
 			}
-			if (this._peek().val === "(") {
+			if (this._isBeginningOfExpression()) {
 				// if the argument provided is an expression, parse it
 				args.push(this._parseExpression());
 			} else {
@@ -188,6 +199,18 @@ class Parser {
 		if (val !== expected) {
 			throw new Error(`Unexpected token ${val}, expected ${expected}`);
 		}
+	}
+
+	_isBoolean(token) {
+		return token === "true" || token === "false";
+	}
+
+	_isBeginningOfExpression() {
+		return this._peek().val === "(";
+	}
+
+	_isEndOfExpression() {
+		return this._peek().val === ")";
 	}
 
 	_hasNext() {

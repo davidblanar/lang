@@ -8,6 +8,7 @@ const TOKEN_TYPES = {
 const AST_TYPES = {
 	number: "number",
 	string: "string",
+	boolean: "boolean",
 	varDeclaration: "varDeclaration",
 	varReference: "varReference",
 	operation: "operation",

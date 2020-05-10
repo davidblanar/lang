@@ -6,7 +6,7 @@ const Parser = require("./Parser");
 const { Env, evalUnderEnv } = require("./Env");
 
 // TODO implement file path
-const input = fs.readFileSync(path.resolve(__dirname, "./file.l")).toString();
+const input = fs.readFileSync(path.resolve(__dirname, "./file2.l")).toString();
 const readStream = new ReadStream(input);
 const tokenizer = new Tokenizer(readStream);
 const tokens = tokenizer.generateTokens().getTokens();
