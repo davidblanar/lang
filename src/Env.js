@@ -49,6 +49,21 @@ function evalOperation(expr, env) {
 		case "%": {
 			return leftOperand % rightOperand;
 		}
+		case ">": {
+			return leftOperand > rightOperand;
+		}
+		case "<": {
+			return leftOperand < rightOperand;
+		}
+		case ">=": {
+			return leftOperand >= rightOperand;
+		}
+		case "<=": {
+			return leftOperand <= rightOperand;
+		}
+		default: {
+			throw new Error(`Unrecognized operation ${expr.val}`);
+		}
 	}
 }
 
@@ -63,7 +78,8 @@ function evalUnderEnv(expr, env) {
 			return result;
 		}
 		case AST_TYPES.number:
-		case AST_TYPES.string: {
+		case AST_TYPES.string:
+		case AST_TYPES.boolean: {
 			return expr.val;
 		}
 		case AST_TYPES.varDeclaration: {

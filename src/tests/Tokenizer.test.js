@@ -163,4 +163,27 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
+
+	it("should correctly tokenize 7", () => {
+		const input = `
+      (> 2 3)
+      (>= 2 3)
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: ">" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: ">" },
+			{ type: TOKEN_TYPES.symbol, val: "=" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
 });

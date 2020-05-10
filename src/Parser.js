@@ -121,7 +121,12 @@ class Parser {
 	}
 
 	_parseSymbol() {
-		const operation = this._next().val;
+		let operation = this._next().val;
+		if (operation === ">" || operation === "<") {
+			if (this._peek().val === "=") {
+				operation += this._next().val;
+			}
+		}
 		return {
 			type: AST_TYPES.operation,
 			val: operation,

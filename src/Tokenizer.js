@@ -3,9 +3,18 @@ const { TOKEN_TYPES } = require("./const");
 class Tokenizer {
 	constructor(readStream) {
 		this._readStream = readStream;
-		// TODO implement >=
-		// TODO implement booleans
-		this._symbols = new Set(["(", ")", "=", "+", "-", "*", "/", "%"]);
+		this._symbols = new Set([
+			"(",
+			")",
+			"=",
+			"+",
+			"-",
+			"*",
+			"/",
+			"%",
+			">",
+			"<"
+		]);
 		this._identifierCharsRe = /[_A-Za-z]/;
 		this._numberCharsRe = /[0-9]/;
 		this._whiteSpaceRe = /\s/;
@@ -21,23 +30,20 @@ class Tokenizer {
 			const current = this._readStream.peek();
 			if (current === "#") {
 				this._skipComment();
-			}
-			if (this._isWhiteSpace(current)) {
+			} else if (this._isWhiteSpace(current)) {
 				this._skip();
-			}
-			if (this._identifierCharsRe.test(current)) {
+			} else if (this._identifierCharsRe.test(current)) {
 				// either a keyword, function name or var name
 				this._readIdentifier();
-			}
-			if (this._symbols.has(current)) {
+			} else if (this._symbols.has(current)) {
 				this._readSymbol();
-			}
-			if (this._numberCharsRe.test(current)) {
+			} else if (this._numberCharsRe.test(current)) {
 				this._readNumber();
-			}
-			if (current === '"') {
+			} else if (current === '"') {
 				// if an opening double quote is encountered, read string
 				this._readString();
+			} else {
+				throw new Error(`Unrecognized character ${current}`);
 			}
 		}
 		return this;

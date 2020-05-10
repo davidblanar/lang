@@ -1,0 +1,6 @@
+#(true)
+#(var x true)
+#(var y false)
+#(call print x)
+(call print (> 2 3))
+(call print (<= 2 3))

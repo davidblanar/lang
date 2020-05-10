@@ -269,4 +269,43 @@ describe("Parser", () => {
 			]
 		});
 	});
+
+	it("should parse correctly 7", () => {
+		/*
+      (> 2 3)
+      (>= 2 3)
+    */
+		const tokens = [
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: ">" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: ">" },
+			{ type: TOKEN_TYPES.symbol, val: "=" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		];
+		const parser = new Parser(tokens);
+		const ast = parser.parse().getAst();
+		expect(ast).toEqual({
+			type: AST_TYPES.root,
+			val: [
+				{
+					type: AST_TYPES.operation,
+					val: ">",
+					leftOperand: { type: AST_TYPES.number, val: 2 },
+					rightOperand: { type: AST_TYPES.number, val: 3 }
+				},
+				{
+					type: AST_TYPES.operation,
+					val: ">=",
+					leftOperand: { type: AST_TYPES.number, val: 2 },
+					rightOperand: { type: AST_TYPES.number, val: 3 }
+				}
+			]
+		});
+	});
 });
