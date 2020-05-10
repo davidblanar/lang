@@ -30,6 +30,14 @@ class Env {
 function evalOperation(expr, env) {
 	const leftOperand = evalUnderEnv(expr.leftOperand, env);
 	const rightOperand = evalUnderEnv(expr.rightOperand, env);
+	if (
+		(typeof leftOperand !== "number" || typeof rightOperand !== "number") &&
+		expr.val !== "="
+	) {
+		throw new Error(
+			`Cannot apply operation ${expr.val} to operands of type ${expr.leftOperand.type} and ${expr.rightOperand.type}`
+		);
+	}
 	switch (expr.val) {
 		case "+": {
 			return leftOperand + rightOperand;

@@ -27,3 +27,6 @@
 # function call
 (call fib 10)
 (call print (call fib 5))
+
+# call built-in function
+(call str_concat "a" "b") # "ab"

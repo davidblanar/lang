@@ -20,6 +20,7 @@ class Parser {
 
 	_parseExpression() {
 		this._requireVal("(");
+		// skip "("
 		this._next();
 		let expr;
 		while (!this._isEndOfExpression()) {
@@ -68,6 +69,8 @@ class Parser {
 				}
 			}
 		}
+		this._requireVal(")");
+		// skip ")"
 		this._next();
 		return expr;
 	}

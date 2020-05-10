@@ -3,38 +3,12 @@ const Tokenizer = require("../Tokenizer");
 const { TOKEN_TYPES } = require("../const");
 
 describe("Tokenizer", () => {
-	it("should correctly tokenize 1", () => {
+	it("should correctly tokenize variable declarations and ignore comments", () => {
 		const input = `
-      (var a 1)
-      (var b "str")
-    `;
-		const readStream = new ReadStream(input);
-		const tokenizer = new Tokenizer(readStream);
-		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual([
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "a" },
-			{ type: TOKEN_TYPES.number, val: 1 },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "b" },
-			{ type: TOKEN_TYPES.string, val: "str" },
-			{ type: TOKEN_TYPES.symbol, val: ")" }
-		]);
-	});
-
-	it("should correctly tokenize 2", () => {
-		const input = `
-      # a simple program
-      (var a 12)
-      
-      
-      
+      # variable declaration
+      (var a true) # inline comment
       (var b 2.5)
-      (call print (+ a b)) # should print 14.5 to console
-
+      (var c "str")
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
@@ -43,7 +17,7 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.symbol, val: "(" },
 			{ type: TOKEN_TYPES.identifier, val: "var" },
 			{ type: TOKEN_TYPES.identifier, val: "a" },
-			{ type: TOKEN_TYPES.number, val: 12 },
+			{ type: TOKEN_TYPES.identifier, val: "true" },
 			{ type: TOKEN_TYPES.symbol, val: ")" },
 			{ type: TOKEN_TYPES.symbol, val: "(" },
 			{ type: TOKEN_TYPES.identifier, val: "var" },
@@ -51,52 +25,21 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.number, val: 2.5 },
 			{ type: TOKEN_TYPES.symbol, val: ")" },
 			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "call" },
-			{ type: TOKEN_TYPES.identifier, val: "print" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.symbol, val: "+" },
-			{ type: TOKEN_TYPES.identifier, val: "a" },
-			{ type: TOKEN_TYPES.identifier, val: "b" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "c" },
+			{ type: TOKEN_TYPES.string, val: "str" },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
 
-	it("should correctly tokenize 3", () => {
+	it("should correctly tokenize variable reference and ignore whitespace", () => {
 		const input = `
-      # comment line
-      (fn my_func1 a b (* a b)) # inline comment
-      # (var a 1)
-      (call my_func1 2 3)
-    `;
-		const readStream = new ReadStream(input);
-		const tokenizer = new Tokenizer(readStream);
-		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual([
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "fn" },
-			{ type: TOKEN_TYPES.identifier, val: "my_func1" },
-			{ type: TOKEN_TYPES.identifier, val: "a" },
-			{ type: TOKEN_TYPES.identifier, val: "b" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.symbol, val: "*" },
-			{ type: TOKEN_TYPES.identifier, val: "a" },
-			{ type: TOKEN_TYPES.identifier, val: "b" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "call" },
-			{ type: TOKEN_TYPES.identifier, val: "my_func1" },
-			{ type: TOKEN_TYPES.number, val: 2 },
-			{ type: TOKEN_TYPES.number, val: 3 },
-			{ type: TOKEN_TYPES.symbol, val: ")" }
-		]);
-	});
+		
+		
+		      (var a 1)
+          (var x a)
+      
 
-	it("should correctly tokenize 4", () => {
-		const input = `
-      (var a 1)
-      (var b a)
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
@@ -109,16 +52,85 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.symbol, val: ")" },
 			{ type: TOKEN_TYPES.symbol, val: "(" },
 			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.identifier, val: "x" },
 			{ type: TOKEN_TYPES.identifier, val: "a" },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
 
-	it("should correctly tokenize 5", () => {
+	it("should correctly tokenize comparisons", () => {
 		const input = `
-      (fn no_args_func (5))
-      (call print (call no_args_func))
+      (= "A" "B")
+      (>= 2 0)
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "=" },
+			{ type: TOKEN_TYPES.string, val: "A" },
+			{ type: TOKEN_TYPES.string, val: "B" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: ">" },
+			{ type: TOKEN_TYPES.symbol, val: "=" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 0 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
+
+	it("should correctly tokenize conditional", () => {
+		const input = `
+      (if (< 2 3) (5) (6))
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "if" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "<" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 6 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
+
+	it("should correctly tokenize basic arithmetic", () => {
+		const input = `
+      (+ 5 4)
+      (- 5 4)
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "+" },
+			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.number, val: 4 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "-" },
+			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.number, val: 4 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
+
+	it("should correctly tokenize function declaration", () => {
+		const input = `
+      (fn mult a b (* a b))
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
@@ -126,90 +138,31 @@ describe("Tokenizer", () => {
 		expect(tokens).toEqual([
 			{ type: TOKEN_TYPES.symbol, val: "(" },
 			{ type: TOKEN_TYPES.identifier, val: "fn" },
-			{ type: TOKEN_TYPES.identifier, val: "no_args_func" },
+			{ type: TOKEN_TYPES.identifier, val: "mult" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
 			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.symbol, val: "*" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
 			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
+
+	it("should correctly tokenize function call", () => {
+		const input = `
+      (call mult 10 20)
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
 			{ type: TOKEN_TYPES.symbol, val: "(" },
 			{ type: TOKEN_TYPES.identifier, val: "call" },
-			{ type: TOKEN_TYPES.identifier, val: "print" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "call" },
-			{ type: TOKEN_TYPES.identifier, val: "no_args_func" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: ")" }
-		]);
-	});
-
-	it("should correctly tokenize 6", () => {
-		const input = `
-      (var x true)
-      (var y false)
-    `;
-		const readStream = new ReadStream(input);
-		const tokenizer = new Tokenizer(readStream);
-		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual([
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "x" },
-			{ type: TOKEN_TYPES.identifier, val: "true" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "y" },
-			{ type: TOKEN_TYPES.identifier, val: "false" },
-			{ type: TOKEN_TYPES.symbol, val: ")" }
-		]);
-	});
-
-	it("should correctly tokenize 7", () => {
-		const input = `
-      (> 2 3)
-      (>= 2 3)
-    `;
-		const readStream = new ReadStream(input);
-		const tokenizer = new Tokenizer(readStream);
-		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual([
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.symbol, val: ">" },
-			{ type: TOKEN_TYPES.number, val: 2 },
-			{ type: TOKEN_TYPES.number, val: 3 },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.symbol, val: ">" },
-			{ type: TOKEN_TYPES.symbol, val: "=" },
-			{ type: TOKEN_TYPES.number, val: 2 },
-			{ type: TOKEN_TYPES.number, val: 3 },
-			{ type: TOKEN_TYPES.symbol, val: ")" }
-		]);
-	});
-
-	it("should correctly tokenize 8", () => {
-		const input = `
-      (var x (if (true) (5) (7)))
-    `;
-		const readStream = new ReadStream(input);
-		const tokenizer = new Tokenizer(readStream);
-		const tokens = tokenizer.generateTokens().getTokens();
-		expect(tokens).toEqual([
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "var" },
-			{ type: TOKEN_TYPES.identifier, val: "x" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "if" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.identifier, val: "true" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.number, val: 5 },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: "(" },
-			{ type: TOKEN_TYPES.number, val: 7 },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
-			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.identifier, val: "mult" },
+			{ type: TOKEN_TYPES.number, val: 10 },
+			{ type: TOKEN_TYPES.number, val: 20 },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
