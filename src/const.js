@@ -5,6 +5,17 @@ const TOKEN_TYPES = {
 	string: "string"
 };
 
+const AST_TYPES = {
+	number: "number",
+	string: "string",
+	varDeclaration: "varDeclaration",
+	varReference: "varReference",
+	operation: "operation",
+	fnDeclaration: "fnDeclaration",
+	fnCall: "fnCall"
+};
+
 module.exports = {
-	TOKEN_TYPES: TOKEN_TYPES
+	TOKEN_TYPES,
+	AST_TYPES
 };

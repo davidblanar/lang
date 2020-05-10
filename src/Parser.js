@@ -1,14 +1,4 @@
-const { TOKEN_TYPES } = require("./const");
-
-const AST_TYPES = {
-	number: "number",
-	string: "string",
-	varDeclaration: "varDeclaration",
-	varReference: "varReference",
-	operation: "operation",
-	fnDeclaration: "fnDeclaration",
-	fnCall: "fnCall"
-};
+const { TOKEN_TYPES, AST_TYPES } = require("./const");
 
 class Parser {
 	constructor(tokens) {
@@ -111,7 +101,7 @@ class Parser {
 	_parseVarReference() {
 		return {
 			type: AST_TYPES.varReference,
-			name: this._next().val
+			val: this._next().val
 		};
 	}
 
