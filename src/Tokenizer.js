@@ -4,6 +4,7 @@ class Tokenizer {
 	constructor(readStream) {
 		this._readStream = readStream;
 		// TODO implement >=
+		// TODO implement booleans
 		this._symbols = new Set(["(", ")", "=", "+", "-", "*", "/", "%"]);
 		this._identifierCharsRe = /[_A-Za-z]/;
 		this._numberCharsRe = /[0-9]/;

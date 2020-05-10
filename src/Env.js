@@ -12,6 +12,7 @@ class Env {
 		this._vars.set(name, val);
 	}
 
+	// search current environment and all parent environments for the variable
 	get(name) {
 		let current = this;
 		while (current) {
@@ -24,4 +25,6 @@ class Env {
 	}
 }
 
-module.exports = Env;
+function evalUnderEnv(exp, env) {}
+
+module.exports = { Env, evalUnderEnv };

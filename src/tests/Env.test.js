@@ -1,4 +1,4 @@
-const Env = require("../Env");
+const { Env } = require("../Env");
 
 describe("Env", () => {
 	it("should store and get variable", () => {
