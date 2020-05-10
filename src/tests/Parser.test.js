@@ -308,4 +308,45 @@ describe("Parser", () => {
 			]
 		});
 	});
+
+	it("should parse correctly 7", () => {
+		/*
+      (var x (if (true) (5) (7)))
+    */
+		const tokens = [
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "x" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "if" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "true" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 7 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		];
+		const parser = new Parser(tokens);
+		const ast = parser.parse().getAst();
+		expect(ast).toEqual({
+			type: AST_TYPES.root,
+			val: [
+				{
+					type: AST_TYPES.varDeclaration,
+					name: "x",
+					val: {
+						type: AST_TYPES.ifCondition,
+						val: { type: AST_TYPES.boolean, val: true },
+						leftOperand: { type: AST_TYPES.number, val: 5 },
+						rightOperand: { type: AST_TYPES.number, val: 7 }
+					}
+				}
+			]
+		});
+	});
 });

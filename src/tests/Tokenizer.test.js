@@ -186,4 +186,31 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
+
+	it("should correctly tokenize 8", () => {
+		const input = `
+      (var x (if (true) (5) (7)))
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "x" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "if" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "true" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 5 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.number, val: 7 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
 });

@@ -50,6 +50,10 @@ class Parser {
 						expr = this._parseBoolean();
 						break;
 					}
+					if (val === "if") {
+						expr = this._parseIfCondition();
+						break;
+					}
 					expr = this._parseVarReference();
 					break;
 				}
@@ -78,6 +82,19 @@ class Parser {
 
 	_parseBoolean() {
 		return { type: AST_TYPES.boolean, val: this._next().val === "true" };
+	}
+	_parseIfCondition() {
+		// skip "if" keyword
+		this._next();
+		const condition = this._parseExpression();
+		const leftOperand = this._parseExpression();
+		const rightOperand = this._parseExpression();
+		return {
+			type: AST_TYPES.ifCondition,
+			val: condition,
+			leftOperand,
+			rightOperand
+		};
 	}
 
 	_parseVarDeclaration() {

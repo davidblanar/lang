@@ -5,6 +5,8 @@ const Tokenizer = require("./Tokenizer");
 const Parser = require("./Parser");
 const { Env, evalUnderEnv } = require("./Env");
 
+// TODO write proper tests (separate by ast and token types)
+// TODO write proper example files
 const args = process.argv;
 if (args.length !== 3) {
 	throw new Error("Usage: node src/script.js <file_path>");
@@ -18,6 +20,7 @@ const tokenizer = new Tokenizer(readStream);
 const tokens = tokenizer.generateTokens().getTokens();
 const parser = new Parser(tokens);
 const ast = parser.parse().getAst();
+console.log(JSON.stringify(ast, null, 2));
 
 const env = new Env();
 // setup global env

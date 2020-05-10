@@ -49,6 +49,9 @@ function evalOperation(expr, env) {
 		case "%": {
 			return leftOperand % rightOperand;
 		}
+		case "=": {
+			return leftOperand === rightOperand;
+		}
 		case ">": {
 			return leftOperand > rightOperand;
 		}
@@ -115,6 +118,12 @@ function evalUnderEnv(expr, env) {
 			};
 			env.add(expr.name, fn);
 			break;
+		}
+		case AST_TYPES.ifCondition: {
+			const condition = evalUnderEnv(expr.val, env);
+			return condition
+				? evalUnderEnv(expr.leftOperand, env)
+				: evalUnderEnv(expr.rightOperand, env);
 		}
 		default: {
 			throw new Error(`Unrecognized expression of type ${expr.type}`);
