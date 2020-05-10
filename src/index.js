@@ -20,7 +20,6 @@ const tokenizer = new Tokenizer(readStream);
 const tokens = tokenizer.generateTokens().getTokens();
 const parser = new Parser(tokens);
 const ast = parser.parse().getAst();
-console.log(JSON.stringify(ast, null, 2));
 
 const env = new Env();
 // setup global env
