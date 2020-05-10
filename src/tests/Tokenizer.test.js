@@ -1,6 +1,6 @@
 const ReadStream = require("../ReadStream");
 const Tokenizer = require("../Tokenizer");
-const { TYPES } = require("../const");
+const { TOKEN_TYPES } = require("../const");
 
 describe("Tokenizer", () => {
 	it("should correctly tokenize 1", () => {
@@ -12,16 +12,16 @@ describe("Tokenizer", () => {
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "var" },
-			{ type: TYPES.identifier, val: "a" },
-			{ type: TYPES.number, val: "1" },
-			{ type: TYPES.symbol, val: ")" },
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "var" },
-			{ type: TYPES.identifier, val: "b" },
-			{ type: TYPES.string, val: "str" },
-			{ type: TYPES.symbol, val: ")" }
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.number, val: 1 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.string, val: "str" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
 
@@ -37,24 +37,24 @@ describe("Tokenizer", () => {
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "var" },
-			{ type: TYPES.identifier, val: "a" },
-			{ type: TYPES.number, val: "12" },
-			{ type: TYPES.symbol, val: ")" },
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "var" },
-			{ type: TYPES.identifier, val: "b" },
-			{ type: TYPES.number, val: "2.5" },
-			{ type: TYPES.symbol, val: ")" },
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "print" },
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.symbol, val: "+" },
-			{ type: TYPES.identifier, val: "a" },
-			{ type: TYPES.identifier, val: "b" },
-			{ type: TYPES.symbol, val: ")" },
-			{ type: TYPES.symbol, val: ")" }
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.number, val: 12 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.number, val: 2.5 },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "+" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
 
@@ -63,22 +63,29 @@ describe("Tokenizer", () => {
       # comment line
       (fn my_func a b (* a b)) # inline comment
       # (var a 1)
+      (call my_func 2 3)
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
 		const tokens = tokenizer.generateTokens().getTokens();
 		expect(tokens).toEqual([
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.identifier, val: "fn" },
-			{ type: TYPES.identifier, val: "my_func" },
-			{ type: TYPES.identifier, val: "a" },
-			{ type: TYPES.identifier, val: "b" },
-			{ type: TYPES.symbol, val: "(" },
-			{ type: TYPES.symbol, val: "*" },
-			{ type: TYPES.identifier, val: "a" },
-			{ type: TYPES.identifier, val: "b" },
-			{ type: TYPES.symbol, val: ")" },
-			{ type: TYPES.symbol, val: ")" }
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "fn" },
+			{ type: TOKEN_TYPES.identifier, val: "my_func" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.symbol, val: "*" },
+			{ type: TOKEN_TYPES.identifier, val: "a" },
+			{ type: TOKEN_TYPES.identifier, val: "b" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "my_func" },
+			{ type: TOKEN_TYPES.number, val: 2 },
+			{ type: TOKEN_TYPES.number, val: 3 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
 });

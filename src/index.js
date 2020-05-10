@@ -5,10 +5,10 @@ const Tokenizer = require("./Tokenizer");
 const Parser = require("./Parser");
 
 const input = fs.readFileSync(path.resolve(__dirname, "./file.l")).toString();
-console.log(input)
+console.log(input);
 const readStream = new ReadStream(input);
 const tokenizer = new Tokenizer(readStream);
 const tokens = tokenizer.generateTokens().getTokens();
-console.log(tokens)
+console.log(tokens);
 const parser = new Parser(tokens);
-parser.parse();
+console.log(parser.parse().getAst());

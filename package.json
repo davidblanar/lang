@@ -7,7 +7,7 @@
     "test": "jest src/tests/*",
     "test:watch": "jest src/tests/* --watch",
     "dev": "nodemon src/index.js",
-    "prettier": "prettier --config ./.prettierrc --write src/**/*.js"
+    "prettier": "prettier --config ./.prettierrc --write \"src/**/*.js\""
   },
   "author": "",
   "license": "ISC",
