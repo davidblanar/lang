@@ -4,6 +4,7 @@ class ReadStream {
 		this._pos = 0;
 	}
 
+	// get the next character and discard it
 	next() {
 		return this._input[this._pos++];
 	}
@@ -12,6 +13,7 @@ class ReadStream {
 		return this._input[this._pos] !== undefined;
 	}
 
+	// get the next character without discarding it
 	peek() {
 		return this._input[this._pos];
 	}

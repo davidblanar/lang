@@ -25,6 +25,7 @@ class Tokenizer {
 				this._skip();
 			}
 			if (this._identifierCharsRe.test(current)) {
+				// either a keyword, function name or var name
 				this._readIdentifier();
 			}
 			if (this._symbols.has(current)) {
@@ -34,6 +35,7 @@ class Tokenizer {
 				this._readNumber();
 			}
 			if (current === '"') {
+				// if an opening double quote is encountered, read string
 				this._readString();
 			}
 		}
@@ -41,6 +43,7 @@ class Tokenizer {
 	}
 
 	_skipComment() {
+		// skip to the end of line
 		while (
 			this._readStream.hasNext() &&
 			this._readStream.next() !== "\n"
@@ -51,6 +54,7 @@ class Tokenizer {
 		let identifier = "";
 		while (this._readStream.hasNext()) {
 			const current = this._readStream.peek();
+			// read until whitespace is encountered or no longer an identifier
 			if (this._isWhiteSpace(current) || !this._isIdentifier(current)) {
 				break;
 			}
@@ -68,6 +72,7 @@ class Tokenizer {
 		let number = "";
 		while (this._readStream.hasNext()) {
 			const current = this._readStream.peek();
+			// read number while the next character is a digit or "." (decimal)
 			if (current === "." || this._numberCharsRe.test(current)) {
 				number += this._readStream.next();
 			} else {
@@ -86,8 +91,9 @@ class Tokenizer {
 		let string = "";
 		while (this._readStream.hasNext()) {
 			const current = this._readStream.peek();
+			// read until we encounter a closing double quote
 			if (current === '"') {
-				// skip ending double quote
+				// skip closing double quote
 				this._readStream.next();
 				break;
 			} else {
@@ -106,6 +112,7 @@ class Tokenizer {
 	}
 
 	_skip() {
+		// skip a single character
 		this._readStream.next();
 	}
 }

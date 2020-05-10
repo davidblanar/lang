@@ -42,7 +42,6 @@ class Parser {
 						expr = this._parseFnDeclaration();
 						break;
 					}
-					// TODO move to constants
 					if (val === "call") {
 						expr = this._parseFnCall();
 						break;
@@ -55,8 +54,9 @@ class Parser {
 					break;
 				}
 				default: {
-					// TODO error
-					break;
+					throw new Error(
+						`Unrecognized token type ${type}, value ${val}`
+					);
 				}
 			}
 		}
@@ -73,6 +73,7 @@ class Parser {
 	}
 
 	_parseVarDeclaration() {
+		// skip "var" keyword
 		this._next();
 		this._requireType(TOKEN_TYPES.identifier);
 		const varName = this._next().val;
@@ -116,39 +117,49 @@ class Parser {
 	}
 
 	_parseFnDeclaration() {
+		// skip "fn" keyword
 		this._next();
+		this._requireType(TOKEN_TYPES.identifier);
 		let isFnName = true;
 		let fnName;
 		let body;
 		const args = [];
 		while (this._peek().val !== ")") {
+			// first token is function name
 			if (isFnName) {
 				isFnName = false;
 				fnName = this._next().val;
 			}
+			// then parse function parameters and body
 			if (this._peek().val === "(") {
+				// the body of a function is an expression
 				body = this._parseExpression();
 			} else {
+				// an identifier, e.g a parameter
 				args.push(this._next().val);
 			}
 		}
 		return { type: AST_TYPES.fnDeclaration, name: fnName, args, body };
 	}
 
-	// TODO add requireTypes and requireVals
 	_parseFnCall() {
+		// skip "call" keyword
 		this._next();
+		this._requireType(TOKEN_TYPES.identifier);
 		let isFnName = true;
 		let fnName;
 		const args = [];
 		while (this._peek().val !== ")") {
+			// first token is function name, which is a var reference
 			if (isFnName) {
 				isFnName = false;
 				fnName = this._parseVarReference();
 			}
 			if (this._peek().val === "(") {
+				// if the argument provided is an expression, parse it
 				args.push(this._parseExpression());
 			} else {
+				// otherwise parse the value of the argument
 				args.push(this._parseVarValue());
 			}
 		}
