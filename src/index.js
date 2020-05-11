@@ -33,5 +33,15 @@ env.add("str_concat", function (a, b) {
 env.add("throw_error", function (e) {
 	throw new Error(e);
 });
+env.add("read_file", function (filePath) {
+	// TODO fix "files/" - make it dynamic
+	return fs
+		.readFileSync(path.resolve(__dirname, "files/", filePath))
+		.toString();
+});
+env.add("write_file", function (filePath, data) {
+	// TODO fix "files/" - make it dynamic
+	return fs.writeFileSync(path.resolve(__dirname, "files/", filePath), data);
+});
 
 evalUnderEnv(ast, env);

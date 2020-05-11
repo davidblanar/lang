@@ -20,6 +20,6 @@ Features:
 <input type="checkbox" checked> Objects (dictionaries)<br/>
 <input type="checkbox" checked> Errors<br/>
 <input type="checkbox"> Imports<br/>
-<input type="checkbox"> File manipulation<br/>
+<input type="checkbox" checked> File manipulation<br/>
 
 For examples see ``src/files/``

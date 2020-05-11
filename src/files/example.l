@@ -27,7 +27,7 @@
 (call print "printing fib(10)")
 (call print (call fib 10))
 
-# call built-in function
+# call a built-in function
 (call str_concat "a" "b") # "ab"
 
 # array-like structures can be implemented in the language directly
@@ -51,6 +51,12 @@
 
 # call a sequence of expressions
 (seq [(call print "first") (call print "second") (call print "third")])
+
+# using recursion
+(fn pow base exp (if (= exp 0)
+    (1)
+    (* base (call pow base (- exp 1)))))
+(call print (call pow 2 3)) # 8
 
 # using null value and some recursion
 # [1,2,3,4,5]
@@ -80,3 +86,9 @@
 (call print (call my_dict "a")) # 200
 (call print (call my_dict "my_key")) # true
 (call print (call my_dict "not_in_dict")) # null
+
+# file manipulation using built-in functions
+(var text (call read_file "./text.txt"))
+(call write_file "./text2.txt" text)
+
+# expect function for testing
