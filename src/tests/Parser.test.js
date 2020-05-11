@@ -7,6 +7,7 @@ describe("Parser", () => {
       (var a true)
       (var b 2.5)
       (var c "str")
+      (var d null)
     */
 		const tokens = [
 			{ type: TOKEN_TYPES.symbol, val: "(" },
@@ -23,6 +24,11 @@ describe("Parser", () => {
 			{ type: TOKEN_TYPES.identifier, val: "var" },
 			{ type: TOKEN_TYPES.identifier, val: "c" },
 			{ type: TOKEN_TYPES.string, val: "str" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "d" },
+			{ type: TOKEN_TYPES.identifier, val: "null" },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		];
 		const parser = new Parser(tokens);
@@ -44,6 +50,11 @@ describe("Parser", () => {
 					type: AST_TYPES.varDeclaration,
 					name: "c",
 					val: { type: AST_TYPES.string, val: "str" }
+				},
+				{
+					type: AST_TYPES.varDeclaration,
+					name: "d",
+					val: { type: AST_TYPES.null, val: null }
 				}
 			]
 		});
@@ -262,6 +273,70 @@ describe("Parser", () => {
 					args: [
 						{ type: AST_TYPES.number, val: 10 },
 						{ type: AST_TYPES.number, val: 20 }
+					]
+				}
+			]
+		});
+	});
+
+	it("should correctly parse sequence", () => {
+		/*
+      (seq [(call print "a") (call print "b") (call print "c")])
+    */
+		const tokens = [
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "seq" },
+			{ type: TOKEN_TYPES.symbol, val: "[" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "a" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "b" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "c" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "]" },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		];
+		const parser = new Parser(tokens);
+		const ast = parser.parse().getAst();
+		expect(ast).toEqual({
+			type: AST_TYPES.root,
+			val: [
+				{
+					type: AST_TYPES.sequence,
+					val: [
+						{
+							type: AST_TYPES.fnCall,
+							name: {
+								type: AST_TYPES.varReference,
+								val: "print"
+							},
+							args: [{ type: AST_TYPES.string, val: "a" }]
+						},
+						{
+							type: AST_TYPES.fnCall,
+							name: {
+								type: AST_TYPES.varReference,
+								val: "print"
+							},
+							args: [{ type: AST_TYPES.string, val: "b" }]
+						},
+						{
+							type: AST_TYPES.fnCall,
+							name: {
+								type: AST_TYPES.varReference,
+								val: "print"
+							},
+							args: [{ type: AST_TYPES.string, val: "c" }]
+						}
 					]
 				}
 			]

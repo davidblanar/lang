@@ -9,6 +9,7 @@ describe("Tokenizer", () => {
       (var a true) # inline comment
       (var b 2.5)
       (var c "str")
+      (var d null)
     `;
 		const readStream = new ReadStream(input);
 		const tokenizer = new Tokenizer(readStream);
@@ -28,6 +29,11 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.identifier, val: "var" },
 			{ type: TOKEN_TYPES.identifier, val: "c" },
 			{ type: TOKEN_TYPES.string, val: "str" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "var" },
+			{ type: TOKEN_TYPES.identifier, val: "d" },
+			{ type: TOKEN_TYPES.identifier, val: "null" },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});
@@ -163,6 +169,37 @@ describe("Tokenizer", () => {
 			{ type: TOKEN_TYPES.identifier, val: "mult" },
 			{ type: TOKEN_TYPES.number, val: 10 },
 			{ type: TOKEN_TYPES.number, val: 20 },
+			{ type: TOKEN_TYPES.symbol, val: ")" }
+		]);
+	});
+
+	it("should correctly tokenize sequence", () => {
+		const input = `
+      (seq [(call print "a") (call print "b") (call print "c")])
+    `;
+		const readStream = new ReadStream(input);
+		const tokenizer = new Tokenizer(readStream);
+		const tokens = tokenizer.generateTokens().getTokens();
+		expect(tokens).toEqual([
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "seq" },
+			{ type: TOKEN_TYPES.symbol, val: "[" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "a" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "b" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "(" },
+			{ type: TOKEN_TYPES.identifier, val: "call" },
+			{ type: TOKEN_TYPES.identifier, val: "print" },
+			{ type: TOKEN_TYPES.string, val: "c" },
+			{ type: TOKEN_TYPES.symbol, val: ")" },
+			{ type: TOKEN_TYPES.symbol, val: "]" },
 			{ type: TOKEN_TYPES.symbol, val: ")" }
 		]);
 	});

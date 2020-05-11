@@ -47,12 +47,20 @@ class Parser {
 						expr = this._parseFnCall();
 						break;
 					}
-					if (val === "true" || val === "false") {
+					if (this._isBoolean(val)) {
 						expr = this._parseBoolean();
+						break;
+					}
+					if (this._isNull(val)) {
+						expr = this._parseNull();
 						break;
 					}
 					if (val === "if") {
 						expr = this._parseIfCondition();
+						break;
+					}
+					if (val === "seq") {
+						expr = this._parseSequence();
 						break;
 					}
 					expr = this._parseVarReference();
@@ -86,6 +94,12 @@ class Parser {
 	_parseBoolean() {
 		return { type: AST_TYPES.boolean, val: this._next().val === "true" };
 	}
+
+	_parseNull() {
+		this._next();
+		return { type: AST_TYPES.null, val: null };
+	}
+
 	_parseIfCondition() {
 		// skip "if" keyword
 		this._next();
@@ -127,6 +141,9 @@ class Parser {
 			case TOKEN_TYPES.identifier: {
 				if (this._isBoolean(val)) {
 					return { type: AST_TYPES.boolean, val: val === "true" };
+				}
+				if (this._isNull(val)) {
+					return { type: AST_TYPES.null, val: null };
 				}
 				return { type: AST_TYPES.varReference, val };
 			}
@@ -210,6 +227,24 @@ class Parser {
 		};
 	}
 
+	_parseSequence() {
+		// skip "seq" keyword
+		this._next();
+		this._requireVal("[");
+		// skip "["
+		this._next();
+		const sequence = [];
+		while (this._peek().val !== "]") {
+			sequence.push(this._parseExpression());
+		}
+		// skip "]"
+		this._next();
+		return {
+			type: AST_TYPES.sequence,
+			val: sequence
+		};
+	}
+
 	_requireType(expected) {
 		const { type } = this._peek();
 		if (type !== expected) {
@@ -228,6 +263,10 @@ class Parser {
 
 	_isBoolean(token) {
 		return token === "true" || token === "false";
+	}
+
+	_isNull(token) {
+		return token === "null";
 	}
 
 	_isBeginningOfExpression() {

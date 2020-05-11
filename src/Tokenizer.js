@@ -13,7 +13,9 @@ class Tokenizer {
 			"/",
 			"%",
 			">",
-			"<"
+			"<",
+			"[",
+			"]"
 		]);
 		this._identifierCharsRe = /[_A-Za-z]/;
 		this._numberCharsRe = /[0-9]/;

@@ -79,10 +79,7 @@ function evalOperation(expr, env) {
 }
 
 // TODO test
-function evalUnderEnv(expr, env, withLog) {
-	if (withLog) {
-		console.log("logging", expr, env);
-	}
+function evalUnderEnv(expr, env) {
 	switch (expr.type) {
 		case AST_TYPES.root: {
 			let result;
@@ -93,7 +90,8 @@ function evalUnderEnv(expr, env, withLog) {
 		}
 		case AST_TYPES.number:
 		case AST_TYPES.string:
-		case AST_TYPES.boolean: {
+		case AST_TYPES.boolean:
+		case AST_TYPES.null: {
 			return expr.val;
 		}
 		case AST_TYPES.varDeclaration: {
@@ -124,15 +122,8 @@ function evalUnderEnv(expr, env, withLog) {
 				expr.args.forEach(function (arg, index) {
 					nestedEnv.add(arg, fnArguments[index]);
 				});
-				if (expr.name === "cons") {
-					// console.log("eval", expr, evalUnderEnv(expr.body, nestedEnv, true))
-				}
 				return evalUnderEnv(expr.body, nestedEnv);
 			};
-			// console.log(555, expr.name, fn)
-			// if (expr.name === "cons") {
-			//   console.log(9292929, fn(3, 4))
-			// }
 			env.add(expr.name, fn);
 			return fn;
 		}
@@ -141,6 +132,13 @@ function evalUnderEnv(expr, env, withLog) {
 			return condition
 				? evalUnderEnv(expr.leftOperand, env)
 				: evalUnderEnv(expr.rightOperand, env);
+		}
+		case AST_TYPES.sequence: {
+			let result;
+			expr.val.forEach(function (expression) {
+				result = evalUnderEnv(expression, env);
+			});
+			return result;
 		}
 		default: {
 			throw new Error(`Unrecognized expression of type ${expr.type}`);
