@@ -79,7 +79,10 @@ function evalOperation(expr, env) {
 }
 
 // TODO test
-function evalUnderEnv(expr, env) {
+function evalUnderEnv(expr, env, withLog) {
+	if (withLog) {
+		console.log("logging", expr, env);
+	}
 	switch (expr.type) {
 		case AST_TYPES.root: {
 			let result;
@@ -94,8 +97,7 @@ function evalUnderEnv(expr, env) {
 			return expr.val;
 		}
 		case AST_TYPES.varDeclaration: {
-			env.add(expr.name, evalUnderEnv(expr.val, env));
-			break;
+			return env.add(expr.name, evalUnderEnv(expr.val, env));
 		}
 		case AST_TYPES.varReference: {
 			return env.get(expr.val);
@@ -122,10 +124,17 @@ function evalUnderEnv(expr, env) {
 				expr.args.forEach(function (arg, index) {
 					nestedEnv.add(arg, fnArguments[index]);
 				});
+				if (expr.name === "cons") {
+					// console.log("eval", expr, evalUnderEnv(expr.body, nestedEnv, true))
+				}
 				return evalUnderEnv(expr.body, nestedEnv);
 			};
+			// console.log(555, expr.name, fn)
+			// if (expr.name === "cons") {
+			//   console.log(9292929, fn(3, 4))
+			// }
 			env.add(expr.name, fn);
-			break;
+			return fn;
 		}
 		case AST_TYPES.ifCondition: {
 			const condition = evalUnderEnv(expr.val, env);
