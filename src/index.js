@@ -22,6 +22,9 @@ const ast = parser.parse().getAst();
 // setup global env
 const env = new Env();
 env.add("print", console.log);
+env.add("to_str", function (val) {
+	return val.toString();
+});
 env.add("str_concat", function (a, b) {
 	if (typeof a !== "string" || typeof b !== "string") {
 		throw new Error(

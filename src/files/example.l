@@ -92,3 +92,9 @@
 (call write_file "./text2.txt" text)
 
 # expect function for testing
+(fn expect val expected (if (= val expected)
+    (true)
+    (call throw_error (call str_concat "Expected "
+        (call str_concat (call to_str val)
+            (call str_concat " to equal " (call to_str expected)))))))
+(call expect "a" "b")
