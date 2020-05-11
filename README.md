@@ -17,7 +17,8 @@ Features:
 <input type="checkbox" checked> Conditionals<br/>
 <input type="checkbox" checked> Comments<br/>
 <input type="checkbox" checked> Arrays<br/>
-<input type="checkbox"> Objects (structs)<br/>
+<input type="checkbox" checked> Objects (dictionaries)<br/>
+<input type="checkbox" checked> Errors<br/>
 <input type="checkbox"> Imports<br/>
 <input type="checkbox"> File manipulation<br/>
 

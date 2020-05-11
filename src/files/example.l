@@ -60,5 +60,23 @@
     (call cons (call f (call car lst)) (call map (call cdr lst) f))))
 
 (fn double a (* a 2))
-(var doubled_lst (call map my_lst double)) # [2,4,6,8,10]
-(call map doubled_lst print)
+(var doubled_lst (call map my_lst double))
+(call map doubled_lst print) # [2,4,6,8,10]
+
+# uncomment to throw error
+# (call throw_error "error!")
+
+# dictionaries can be implemented using functions as well
+(fn make_dict dict key val
+    (fn _ k (if (= key k)
+        (val)
+        (if (= null dict)
+        (null)
+        (call dict k)))))
+
+(var my_dict (call make_dict null "a" 200))
+(var my_dict (call make_dict my_dict "my_key" true))
+
+(call print (call my_dict "a")) # 200
+(call print (call my_dict "my_key")) # true
+(call print (call my_dict "not_in_dict")) # null
