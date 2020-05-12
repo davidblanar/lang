@@ -119,3 +119,9 @@
 (call expect (call or true false) (true))
 (call expect (call or false true) (true))
 (call expect (call or false false) (false))
+
+# "not" functionality
+(fn not cond (if (cond) (false) (true)))
+
+(call expect (call not true) (false))
+(call expect (call not false) (true))
