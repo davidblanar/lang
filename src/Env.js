@@ -78,10 +78,11 @@ function evalOperation(expr, env) {
 	}
 }
 
-// TODO test
 function evalUnderEnv(expr, env) {
 	switch (expr.type) {
-		case AST_TYPES.root: {
+		// TODO maybe unify this
+		case AST_TYPES.root:
+		case AST_TYPES.sequence: {
 			let result;
 			expr.val.forEach(function (expression) {
 				result = evalUnderEnv(expression, env);
@@ -132,13 +133,6 @@ function evalUnderEnv(expr, env) {
 			return condition
 				? evalUnderEnv(expr.leftOperand, env)
 				: evalUnderEnv(expr.rightOperand, env);
-		}
-		case AST_TYPES.sequence: {
-			let result;
-			expr.val.forEach(function (expression) {
-				result = evalUnderEnv(expression, env);
-			});
-			return result;
 		}
 		default: {
 			throw new Error(`Unrecognized expression of type ${expr.type}`);

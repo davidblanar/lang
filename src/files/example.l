@@ -89,7 +89,7 @@
 
 # file manipulation using built-in functions
 (var text (call read_file "./text.txt"))
-(call write_file "./text2.txt" text)
+(call write_file "./text2.txt" (call str_concat text text))
 
 # expect function for testing
 (fn expect val expected (if (= val expected)
