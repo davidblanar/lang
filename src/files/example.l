@@ -97,4 +97,25 @@
     (call throw_error (call str_concat "Expected "
         (call str_concat (call to_str val)
             (call str_concat " to equal " (call to_str expected)))))))
-(call expect "a" "b")
+(call expect "a" "a")
+# (call expect "a" "b") # would throw an error
+
+# "and" functionality
+(fn and cond1 cond2 (if (cond1)
+    (cond2)
+    (false)))
+
+(call expect (call and true true) (true))
+(call expect (call and true false) (false))
+(call expect (call and false true) (false))
+(call expect (call and false false) (false))
+
+# "or" functionality
+(fn or cond1 cond2 (if (cond1)
+    (true)
+    (cond2)))
+
+(call expect (call or true true) (true))
+(call expect (call or true false) (true))
+(call expect (call or false true) (true))
+(call expect (call or false false) (false))
