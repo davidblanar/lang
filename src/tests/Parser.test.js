@@ -34,7 +34,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.varDeclaration,
@@ -80,7 +80,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.varDeclaration,
@@ -117,7 +117,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.operation,
@@ -158,7 +158,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.ifCondition,
@@ -195,7 +195,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.operation,
@@ -233,7 +233,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.fnDeclaration,
@@ -265,7 +265,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.fnCall,
@@ -308,7 +308,7 @@ describe("Parser", () => {
 		const parser = new Parser(tokens);
 		const ast = parser.parse().getAst();
 		expect(ast).toEqual({
-			type: AST_TYPES.root,
+			type: AST_TYPES.sequence,
 			val: [
 				{
 					type: AST_TYPES.sequence,

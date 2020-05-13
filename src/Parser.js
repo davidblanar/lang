@@ -15,7 +15,7 @@ class Parser {
 	}
 
 	getAst() {
-		return { type: AST_TYPES.root, val: this._ast };
+		return { type: AST_TYPES.sequence, val: this._ast };
 	}
 
 	_parseExpression() {

@@ -80,8 +80,6 @@ function evalOperation(expr, env) {
 
 function evalUnderEnv(expr, env) {
 	switch (expr.type) {
-		// TODO maybe unify this
-		case AST_TYPES.root:
 		case AST_TYPES.sequence: {
 			let result;
 			expr.val.forEach(function (expression) {

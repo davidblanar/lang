@@ -16,8 +16,7 @@ const AST_TYPES = {
 	operation: "operation",
 	fnDeclaration: "fnDeclaration",
 	fnCall: "fnCall",
-	sequence: "sequence",
-	root: "root"
+	sequence: "sequence"
 };
 
 module.exports = {
