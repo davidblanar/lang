@@ -53,10 +53,7 @@ class Tokenizer {
 
 	_skipComment() {
 		// skip to the end of line
-		while (
-			this._readStream.hasNext() &&
-			this._readStream.next() !== "\n"
-		) {}
+		while (this._readStream.hasNext() && this._readStream.next() !== "\n") {}
 	}
 
 	_readIdentifier() {

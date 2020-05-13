@@ -71,9 +71,7 @@ class Parser {
 					break;
 				}
 				default: {
-					throw new Error(
-						`Unrecognized token type ${type}, value ${val}`
-					);
+					throw new Error(`Unrecognized token type ${type}, value ${val}`);
 				}
 			}
 		}

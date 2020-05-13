@@ -53,9 +53,7 @@ env.add("throw_error", function (e) {
 });
 env.add("read_file", function (filePath) {
 	return fs
-		.readFileSync(
-			path.resolve(__dirname, fileManipulationPathPrefix, filePath)
-		)
+		.readFileSync(path.resolve(__dirname, fileManipulationPathPrefix, filePath))
 		.toString();
 });
 env.add("write_file", function (filePath, data) {
